@@ -23,7 +23,7 @@ jobs:
             push: true
             tags: |
              ${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}
-            file: ./Dockerfile
+            file: dockerdeploydemo/Dockerfile
             context: ./
           
 
