@@ -18,7 +18,8 @@ jobs:
           uses: actions/checkout@master
           
         - name: List files in tool cache
-        - run: ls ${{ runner.tool_cache }}
+        - run: | 
+           ls ${{ runner.tool_cache }}
                     
         - name: 'Build and push image'
           uses: azure/docker-login@v1
