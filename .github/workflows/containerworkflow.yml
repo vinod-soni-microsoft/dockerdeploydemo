@@ -24,5 +24,5 @@ jobs:
             username: ${{ secrets.SERVICE_PRINCIPAL_ID }}
             password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
 
-        - run: docker build ./dockerdeploydemo/Dockerfile -t ${{ env.IMAGE_NAME }}
+        - run: docker build ./Dockerfile -t ${{ env.IMAGE_NAME }}
         - run: docker push ${{ env.IMAGE_NAME }}
