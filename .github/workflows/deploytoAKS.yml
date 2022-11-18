@@ -1,6 +1,6 @@
 name: Container Workflow - AKS
 on:
-  #push:
+  push:
   workflow_dispatch:
 
 env:
@@ -24,14 +24,23 @@ jobs:
             username: ${{ secrets.SERVICE_PRINCIPAL_ID }}
             password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
 
-        - run: docker build . -t ${{ env.IMAGE_NAME }}
-        - run: docker push ${{ env.IMAGE_NAME }}
+        #- run: docker build . -t ${{ env.IMAGE_NAME }}
+        #- run: docker push ${{ env.IMAGE_NAME }}
+        
+        - name: Build and push container image to registry
+          uses: docker/build-push-action@v2
+          with:
+            push: true
+            tags: |
+             ${{ secrets.REGISTRY_LOGIN_SERVER }}/webapp:${{ github.sha }}
+            file: dockerdeploydemo/Dockerfile
+            context: ./
     
     deploy-to-aks:
       
       runs-on: ubuntu-latest
       
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
 
       needs: build-deploy-image
           
@@ -66,8 +75,8 @@ jobs:
       - uses: azure/k8s-deploy@v1
         with:
           manifests: |
-            manifests/deployment.yml
-            manifests/service.yml
+            dockerdeploydemo/manifests/deployment.yml
+            dockerdeploydemo/manifests/service.yml
           images: |
             ${{ env.IMAGE_NAME }}
           imagepullsecrets: |
